@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public Text scoreValue;
     public Text healthValue;
     SpawnManager spawn;
-    //public GameObject levelCompletePanel;
+    public GameObject levelCompletePanel;
 
     int health = 100;
     int maxHealth = 100;
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //levelCompletePanel.SetActive(false);
+        levelCompletePanel.SetActive(false);
         spawn = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         animator = GetComponent<Animator>();
         //animator.SetTrigger("isIdle");
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
         if (spawn.number == dealthCount)
         {
-            //levelCompletePanel.SetActive(true);
+            levelCompletePanel.SetActive(true);
         }
     }
 
