@@ -1753,7 +1753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 4858005932450810756}
-  target: {fileID: 0}
+  target: {fileID: 1759711308300619029, guid: 1774a3589251c3846888f0abca4cd88d, type: 3}
   walkingSpeed: 1
   runningSpeed: 2
   state: 0

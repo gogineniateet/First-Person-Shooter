@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     public float playerSpeed = 12f;
     public Transform gunFirePoint;
     Animator animator;
-    //public Text scoreValue;
-    //public Text healthValue;
+    public Text scoreValue;
+    public Text healthValue;
     SpawnManager spawn;
     //public GameObject levelCompletePanel;
 
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // levelCompletePanel.SetActive(false);
+        //levelCompletePanel.SetActive(false);
         spawn = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         animator = GetComponent<Animator>();
         //animator.SetTrigger("isIdle");
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerRun(float xInput, float zInput)
     {
-        Vector3 move = transform.right *  xInput + transform.forward * zInput;
+        Vector3 move = transform.right * xInput + transform.forward * zInput;
         controller.Move(move * playerSpeed * Time.deltaTime);
 
     }
@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
             if (hitZombie.tag == "Zombie")
             {
                 score = score + 10;
-                //scoreValue.text = score.ToString();
+                scoreValue.text = score.ToString();
                 dealthCount++;
                 Destroy(hitZombie);
             }
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
             else
                 health = health + maxMedkitHealth;
 
-           // healthValue.text = health.ToString();
+            healthValue.text = health.ToString();
             Debug.Log("Health:" + health);
             Destroy(other.gameObject);
         }
@@ -119,12 +119,11 @@ public class PlayerController : MonoBehaviour
     public void TakeHit(int healthDecrease)
     {
         health = Mathf.Clamp(health - healthDecrease, 0, maxHealth);
-       // healthValue.text = health.ToString();
+        healthValue.text = health.ToString();
         print(health);
 
         if (health <= 0)
         {
-            gameObject.SetActive(false);
             Debug.Log("Player Will Die"); ;
         }
     }
