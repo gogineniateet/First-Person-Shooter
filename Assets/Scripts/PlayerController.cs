@@ -1,48 +1,131 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class PlayerController : MonoBehaviour
 {
-    public float playerSpeed;
-    public float playerJumpForce;
-    public float playerRotationSpeed;
-    
+    public CharacterController controller;
+    public float playerSpeed = 12f;
+    public Transform gunFirePoint;
     Animator animator;
-    Rigidbody rb;
+    //public Text scoreValue;
+    //public Text healthValue;
+    SpawnManager spawn;
+    //public GameObject levelCompletePanel;
 
+    int health = 100;
+    int maxHealth = 100;
+    int maxMedkitHealth = 50;
+
+    int ammo = 30;
+    int maxAmmo = 30;
+    int maxAmmokitAmmo = 30;
+
+    int score = 0;
+
+    int dealthCount = 0;
+    // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+       // levelCompletePanel.SetActive(false);
+        spawn = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         animator = GetComponent<Animator>();
+        //animator.SetTrigger("isIdle");
     }
 
-    
+    // Update is called once per frame
     void Update()
     {
         animator.SetTrigger("isIdle");
-
-        // player left, right, back, forward movements
-        float inputX = Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime;
-        float inputZ = Input.GetAxis("Vertical") * playerSpeed * Time.deltaTime;
-        transform.Translate(inputX, 0f, inputZ);
-        if(Input.GetAxis("Horizontal")!=0 || Input.GetAxis("Vertical")!=0)
+        float xInput = Input.GetAxis("Horizontal");
+        float zInput = Input.GetAxis("Vertical");
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             animator.SetTrigger("isRunning");
+            PlayerRun(xInput, zInput);
         }
 
-        // player jump
-        if (Input.GetKeyDown(KeyCode.Space))
+
+
+        if (Input.GetMouseButtonDown(0))
         {
-            rb.AddForce(Vector3.up * playerJumpForce);
+            ammo--;
+            if (ammo >= 0)
+            {
+                animator.SetTrigger("isShooting");
+                WhenZombieGotHit();
+                Debug.Log("Ammo: " + ammo);
+            }
         }
 
-        // player firing...on mouse click
-        if(Input.GetMouseButtonDown(0))
+        if (spawn.number == dealthCount)
         {
-            animator.SetTrigger("isShooting");
-            //Debug.Log("firing");
+            //levelCompletePanel.SetActive(true);
+        }
+    }
+
+    private void PlayerRun(float xInput, float zInput)
+    {
+        Vector3 move = transform.right *  xInput + transform.forward * zInput;
+        controller.Move(move * playerSpeed * Time.deltaTime);
+
+    }
+    private void WhenZombieGotHit()
+    {
+        RaycastHit hitInfo;
+        if (Physics.Raycast(gunFirePoint.position, gunFirePoint.forward, out hitInfo, 100f))
+        {
+            GameObject hitZombie = hitInfo.collider.gameObject;
+            if (hitZombie.tag == "Zombie")
+            {
+                score = score + 10;
+                //scoreValue.text = score.ToString();
+                dealthCount++;
+                Destroy(hitZombie);
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "MedKit")
+        {
+            int healthNeeded = maxHealth - health;
+            if (maxMedkitHealth >= healthNeeded)
+                health = health + healthNeeded;
+            else
+                health = health + maxMedkitHealth;
+
+           // healthValue.text = health.ToString();
+            Debug.Log("Health:" + health);
+            Destroy(other.gameObject);
         }
 
+        if (other.gameObject.tag == "AmmoKit")
+        {
+            int ammoNeeded = maxAmmo - ammo;
+            if (maxAmmokitAmmo >= ammoNeeded)
+                ammo = ammo + ammoNeeded;
+            else
+                ammo = ammo + maxAmmokitAmmo;
+
+            Debug.Log("Ammo :" + ammo);
+            Destroy(other.gameObject);
+        }
+    }
+
+    public void TakeHit(int healthDecrease)
+    {
+        health = Mathf.Clamp(health - healthDecrease, 0, maxHealth);
+       // healthValue.text = health.ToString();
+        print(health);
+
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+            Debug.Log("Player Will Die"); ;
+        }
     }
 }
