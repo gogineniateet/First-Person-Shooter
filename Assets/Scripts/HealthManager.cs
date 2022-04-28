@@ -16,5 +16,6 @@ public class HealthManager : MonoBehaviour
     {
         health -= healthDecrease;
         print("Health:" + health);
+
     }
 }

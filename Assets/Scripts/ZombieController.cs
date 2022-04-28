@@ -157,7 +157,7 @@ public class ZombieController : MonoBehaviour
         int damageAmount = 5;
         if (target != null)
         {
-            //target.GetComponent<PlayerController>().TakeHit(damageAmount);//create a method Random sound when player takes damage
+            target.GetComponent<PlayerController>().TakeHit(damageAmount);//create a method Random sound when player takes damage
         }
     }
 }

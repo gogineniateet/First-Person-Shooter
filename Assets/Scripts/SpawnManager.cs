@@ -18,7 +18,6 @@ public class SpawnManager : MonoBehaviour
         {
             CreateAllZombies();
         }
-
     }
 
     private void CreateAllZombies()
@@ -27,7 +26,7 @@ public class SpawnManager : MonoBehaviour
         {
             print("Transform.position = " + transform.position);
             Vector3 randomPoint = transform.position + Random.insideUnitSphere * spawnRadius;
-            print("Random point = " + randomPoint);
+            //print("Random point = " + randomPoint);
             NavMeshHit hit;
             if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
             {
